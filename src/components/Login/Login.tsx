@@ -5,6 +5,7 @@ import { getUsersThunk, loginUserThunk } from "../../redux/modules/users";
 import { useAppDispatch } from "../../redux/config/configStore";
 import useInput from "../../hooks/useInput";
 import useEmailValidation from "../../hooks/useEmailValidation";
+import { useNavigate } from "react-router-dom";
 
 const boxStyle = {
     position: "absolute",
@@ -19,6 +20,7 @@ const boxStyle = {
 };
 
 const Login = () => {
+    const navigator = useNavigate();
     const dispatch = useAppDispatch();
     const emailValidator = useEmailValidation();
     useEffect(() => {
@@ -86,10 +88,12 @@ const Login = () => {
                         target: "incorrectPassword"
                     });
                     break;
+                case "Login succeeded.":
+                    navigator("/");
+                    break;
                 default:
                     setEmail("");
                     setPassword("");
-                // TODO: LOGIN SUCCESS.
             }
         }
     };

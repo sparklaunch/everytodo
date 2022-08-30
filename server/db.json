@@ -1,3 +1,10 @@
 {
-    "users": []
+  "users": [
+    {
+      "userID": "d60bb3c6-f403-4195-aa94-84791f34b652",
+      "email": "redwoodnatlpark@gmail.com",
+      "password": "1234",
+      "id": 1
+    }
+  ]
 }

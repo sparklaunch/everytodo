@@ -26,6 +26,7 @@ import useRedundancyCheck from "../../hooks/useRedundancyCheck";
 import useEmailValidation from "../../hooks/useEmailValidation";
 import usePasswordScore from "../../hooks/usePasswordScore";
 import useValidation from "../../hooks/useValidation";
+import { useNavigate } from "react-router-dom";
 
 const boxStyle = {
     position: "absolute",
@@ -44,7 +45,7 @@ const Signup = () => {
     useEffect(() => {
         dispatch(getUsersThunk());
     }, [dispatch]);
-
+    const navigator = useNavigate();
     const redundancyChecker = useRedundancyCheck();
     const emailValidator = useEmailValidation();
     const passwordScorer = usePasswordScore();
@@ -121,7 +122,7 @@ const Signup = () => {
             });
         }
     };
-    const signupClickHandler = () => {
+    const signupClickHandler = async () => {
         const response = validator({
             email,
             password,
@@ -129,14 +130,17 @@ const Signup = () => {
         });
         if (response === "okay") {
             const newUser = {
-                id: uuidV4(),
+                userID: uuidV4(),
                 email,
                 password
             };
             setEmail("");
             setPassword("");
             setPasswordConfirmation("");
-            dispatch(createUserThunk(newUser));
+            const response = await dispatch(createUserThunk(newUser));
+            if (response.payload === "Signup succeeded.") {
+                navigator("/");
+            }
         } else {
             switch (response) {
                 case "emptyEmail":

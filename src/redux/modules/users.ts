@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { setCookie } from "../../shared/Cookie";
+import { generateJWTToken } from "../../utils/JWT";
 
 type User = {
-    id: string,
+    userID: string,
     email: string,
     password: string
 }
@@ -31,7 +33,9 @@ export const loginUserThunk = createAsyncThunk("users/findUser", async (userInfo
         const user = data[0]
         if (user) {
             if (user.password === userInfo.password) {
-                return thunk.fulfillWithValue(user);
+                const token = generateJWTToken(user.email);
+                setCookie("access_token", token);
+                return thunk.fulfillWithValue("Login succeeded.");
             } else {
                 return thunk.rejectWithValue("Incorrect password.")
             }
@@ -46,6 +50,9 @@ export const loginUserThunk = createAsyncThunk("users/findUser", async (userInfo
 export const createUserThunk = createAsyncThunk("users/createUser", async (newUser: User, thunk) => {
     try {
         await axios.post("http://localhost:3001/users", newUser);
+        const token = generateJWTToken(newUser.email);
+        setCookie("access_token", token);
+        return thunk.fulfillWithValue("Signup succeeded.");
     } catch (error) {
         return thunk.rejectWithValue(error);
     }
