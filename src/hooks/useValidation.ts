@@ -9,7 +9,7 @@ interface FormValues {
 
 const useValidation = () => {
     const emailValidator = useEmailValidation();
-    const redundanyChecker = useRedundancyCheck();
+    const redundancyChecker = useRedundancyCheck();
     return ({ email, password, passwordConfirmation }: FormValues) => {
         if (email.length === 0) {
             return "emptyEmail";
@@ -17,7 +17,7 @@ const useValidation = () => {
         if (!emailValidator(email)) {
             return "invalidEmail";
         }
-        if (redundanyChecker(email)) {
+        if (redundancyChecker(email)) {
             return "redundantEmail";
         }
         if (password.length === 0) {

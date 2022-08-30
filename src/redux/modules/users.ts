@@ -66,7 +66,7 @@ export const getUsersThunk = createAsyncThunk(
             if (data) {
                 return thunk.fulfillWithValue(data);
             } else {
-                throw new Error("No Redundancy");
+                return thunk.rejectWithValue("No Redundancy");
             }
         } catch (error) {
             return thunk.rejectWithValue(error);

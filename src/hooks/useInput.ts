@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Dispatch } from "react";
 
 const useInput = <T>(initialValue: T): [T, Dispatch<React.SetStateAction<T>>, (event: ChangeEvent<HTMLInputElement>) => void] => {
