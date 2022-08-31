@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { setCookie } from "../../shared/Cookie";
+import {removeCookie, setCookie} from "../../shared/Cookie";
 import { generateJWTToken } from "../../utils/JWT";
 
 type User = {
@@ -27,7 +27,12 @@ interface UserInfo {
     password: string;
 }
 
-export const loginUserThunk = createAsyncThunk("users/findUser", async (userInfo: UserInfo, thunk) => {
+export const logoutUserThunk = createAsyncThunk("users/logoutUser", (_, thunk) => {
+    removeCookie("access_token");
+    return thunk.fulfillWithValue("Logout succeeded.");
+});
+
+export const loginUserThunk = createAsyncThunk("users/loginUser", async (userInfo: UserInfo, thunk) => {
     try {
         const { data } = await axios.get(`http://localhost:3001/users?email=${userInfo.email}`);
         const user = data[0]
@@ -102,6 +107,15 @@ const userSlice = createSlice({
         }).addCase(loginUserThunk.fulfilled, (state) => {
             state.isLoading = false;
         }).addCase(loginUserThunk.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        })
+
+        builder.addCase(logoutUserThunk.pending, (state) => {
+            state.isLoading = true;
+        }).addCase(logoutUserThunk.fulfilled, (state) => {
+            state.isLoading = false;
+        }).addCase(logoutUserThunk.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
         })
